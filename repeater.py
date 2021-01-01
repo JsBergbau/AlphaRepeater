@@ -38,18 +38,19 @@ def verarbeiteDatenpaket(datenpaket):
 	kommandofix="hcitool -i hci0 cmd 0x08 0x0008 1e "
 	
 	
-	
-	if re.match(r'[A-F0-9]{32}4D493430',datenpaket):#prüfen ob wir Daten eines Alpha Readers empfangen
+	#print(datenpaket)
+	if re.match(r'[A-F0-9]{32}4D493430|[A-F0-9]{32}060D165D',datenpaket):#prüfen ob wir komptabile Datenpakete empfangen, [A-F0-9]{32}4D493430 Alpha Reader, [A-F0-9]{32}060D165D Alpha 3 mit integriertem Bluetooth
 		#print("ok")
 		#print("Datenpaket:" + datenpaket)
-		datenpaket=re.search(r'06084D49.*',datenpaket).group(0)
+		datenpaket=re.search(r'06084D49.*|0201060D.*',datenpaket).group(0) # 06084D49.* AlphaReader ; |0201060D.* Alpha 3
 		datenpaket=re.sub(r'[A-F0-9]{2}$','',datenpaket) #Signalstärke entfernen
-		datenpaket=re.sub(r'([0-9A-F]{2})',r'\1 ',datenpaket)
+		datenpaket=re.sub(r'([0-9A-F]{2})',r'\1 ',datenpaket) #abcdef in 2er Gruppen ab cd ef
 		kommando = kommandofix + datenpaket + " > /dev/null"
 		KommandoWarteschlange.append(kommando)
 		#print("Warteschlangenlänge: " + str(len(KommandoWarteschlange)))
 		if(len(KommandoWarteschlange)>=5): #Vermeide, dass sich eine Verzögerung aufbaut
 			KommandoWarteschlange.clear()
+			print("Warnung, Paketwarteschlange entstanden. Wird geleert")
 		#print(kommando)
 		#os.system(kommando)
 
