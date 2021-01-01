@@ -17,9 +17,9 @@ KommandoWarteschlange=deque()
 def thread_sendeDaten():
 	while True:
 		try:
-			print("Repeating...")
 			cmd=KommandoWarteschlange.popleft()
 			#print(cmd)
+			print("Repeating...")
 			os.system(cmd)
 		except IndexError:
 			time.sleep(0.05)
